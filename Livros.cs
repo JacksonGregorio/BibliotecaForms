@@ -9,10 +9,16 @@ namespace BibliotecaForms
     public class Livros
     {
         public List<Livro> Acervo { get; set; } = new List<Livro>();
+        public List<Livro> listaLivros = new List<Livro>();
 
         public void Adicionar(Livro livro)
         {
             Acervo.Add(livro);
+        }
+
+        public List<Livro> ObterTodos()
+        {
+            return Acervo;
         }
 
         public Livro Pesquisar(int isbn)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace BibliotecaForms
@@ -6,6 +7,7 @@ namespace BibliotecaForms
     public partial class Form1 : Form
     {
         private Livros livros = new Livros();
+        private DataGridView dataGridView;
 
         public Form1()
         {
@@ -18,7 +20,6 @@ namespace BibliotecaForms
             this.Text = "Sistema de Biblioteca";
             this.Size = new System.Drawing.Size(1000, 1000);
 
-           
             string imagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Biblitecaimagem.PNG");
             this.BackgroundImage = Image.FromFile(imagePath);
             this.BackgroundImageLayout = ImageLayout.Stretch;
@@ -42,6 +43,40 @@ namespace BibliotecaForms
 
             this.MainMenuStrip = menu;
             this.Controls.Add(menu);
+
+            // Inicializando o DataGridView
+            dataGridView = new DataGridView
+            {
+                Location = new System.Drawing.Point(20, 50),
+                Size = new System.Drawing.Size(950, 400),
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                AllowUserToDeleteRows = false
+            };
+
+            dataGridView.Columns.Add("ISBN", "ISBN");
+            dataGridView.Columns.Add("Titulo", "Título");
+            dataGridView.Columns.Add("Autor", "Autor");
+            dataGridView.Columns.Add("Editora", "Editora");
+            dataGridView.Columns.Add("QtdeExemplares", "Quantidade de Exemplares");
+            dataGridView.Columns.Add("QtdeDisponiveis", "Disponíveis");
+            dataGridView.Columns.Add("QtdeEmprestimos", "Empréstimos");
+
+            this.Controls.Add(dataGridView);
+
+            // Preenchendo o DataGridView com os livros cadastrados
+            var btnAtualizar = new Button
+            {
+                Text = "Atualizar Tabela",
+                Location = new System.Drawing.Point(20, 470),
+                Size = new System.Drawing.Size(150, 30)
+            };
+            btnAtualizar.Click += (s, e) => AtualizarTabela(dataGridView);
+            this.Controls.Add(btnAtualizar);
+
+            // Preenchendo o DataGridView com os livros cadastrados
+            AtualizarTabela(dataGridView);
         }
 
 
@@ -85,6 +120,7 @@ namespace BibliotecaForms
                     }
 
                     livros.Adicionar(livro);
+                    AtualizarTabela(dataGridView); // Atualiza a tabela após adicionar o livro
                     form.Close();
                 }
                 else
@@ -106,6 +142,15 @@ namespace BibliotecaForms
             form.Controls.Add(btnSalvar);
 
             form.ShowDialog();
+        }
+
+        private void AtualizarTabela(DataGridView dataGridView)
+        {
+            dataGridView.Rows.Clear();
+            foreach (var livro in livros.ObterTodos())
+            {
+                dataGridView.Rows.Add(livro.Isbn, livro.Titulo, livro.Autor, livro.Editora, livro.QtdeExemplares(), livro.QtdeDisponiveis(), livro.QtdeEmprestimos());
+            }
         }
 
 
@@ -157,7 +202,9 @@ namespace BibliotecaForms
                 if (livro != null && livro.QtdeDisponiveis() > 0)
                 {
                     livro.Emprestar();
+                    AtualizarTabela(dataGridView);
                     MessageBox.Show("Empréstimo registrado com sucesso.");
+
                 }
                 else
                 {
@@ -189,6 +236,7 @@ namespace BibliotecaForms
                 if (livro != null && livro.QtdeEmprestimos() > 0)
                 {
                     livro.Devolver();
+                    AtualizarTabela(dataGridView);
                     MessageBox.Show("Devolução registrada com sucesso.");
                 }
                 else

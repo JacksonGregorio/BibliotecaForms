@@ -8,7 +8,7 @@ namespace BibliotecaForms
 {
     public class Exemplar
     {
-        public bool Disponivel { get; private set; } = true;
+        public bool Disponivel { get; set; } = true;
         private int emprestimos = 0;
 
         public void Emprestar()
@@ -25,6 +25,7 @@ namespace BibliotecaForms
             if (!Disponivel)
             {
                 Disponivel = true;
+                emprestimos--;
             }
         }
 

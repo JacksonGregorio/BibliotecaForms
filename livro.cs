@@ -29,7 +29,7 @@ namespace BibliotecaForms
             int count = 0;
             foreach (var exemplar in Exemplares)
             {
-                if (exemplar.Disponivel) 
+                if (exemplar.Disponivel)
                 {
                     count++;
                 }
@@ -57,7 +57,7 @@ namespace BibliotecaForms
         {
             foreach (var exemplar in Exemplares)
             {
-                if (exemplar.Disponivel) 
+                if (exemplar.Disponivel)
                 {
                     exemplar.Emprestar();
                     break;
@@ -69,7 +69,7 @@ namespace BibliotecaForms
         {
             foreach (var exemplar in Exemplares)
             {
-                if (!exemplar.Disponivel) 
+                if (!exemplar.Disponivel)
                 {
                     exemplar.Devolver();
                     break;
